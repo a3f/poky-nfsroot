@@ -1030,12 +1030,10 @@ to your build configuration.
             self.nfs_instance += 1
             nfsd_port += 1
 
-        mountd_port = nfsd_port
         # Export vars for runqemu-export-rootfs
         export_dict = {
-            'NFS_INSTANCE': self.nfs_instance,
-            'NFSD_PORT': nfsd_port,
-            'MOUNTD_PORT': mountd_port,
+            'INSTANCE': self.nfs_instance,
+            'PORT': nfsd_port,
         }
         for k, v in export_dict.items():
             # Use '%s' since they are integers
@@ -1045,7 +1043,7 @@ to your build configuration.
         if qb_nfsrootfs_extra_opt and not qb_nfsrootfs_extra_opt.startswith(","):
             qb_nfsrootfs_extra_opt = "," + qb_nfsrootfs_extra_opt
 
-        self.unfs_opts="nfsvers=3,port=%s,tcp,mountport=%s%s" % (nfsd_port, mountd_port, qb_nfsrootfs_extra_opt)
+        self.unfs_opts="nfsvers=3,port=%s,tcp,mountport=%s%s" % (nfsd_port, nfsd_port, qb_nfsrootfs_extra_opt)
 
         # Extract .tar.bz2 or .tar.bz if no nfs dir
         if not (self.rootfs and os.path.isdir(self.rootfs)):
