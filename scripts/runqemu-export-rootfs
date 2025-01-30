@@ -103,6 +103,30 @@ do_nfs_unprep() {
 	fi
 }
 
+### namespace: 9p ###
+#
+
+# FIXME no native recipe yet
+VAR_9p_SERVER="/sbin/diod"
+VAR_9p_ROOTOPTS="root=IP_ADDRESS rootfstype=9p rootflags=trans=tcp,cache=loose,uname=root,access=0,dfltuid=0,dfltgid=0,aname=$EXPORT_DIR"
+
+## For debugging you would additionally add
+## -d 1
+DIOD_OPTS="-c /dev/null -f -n -N -U 0 -l 0.0.0.0:$PORT -e $EXPORT_DIR"
+
+do_9p_start () {
+	echo "Starting diod"
+	echo "  $PSEUDO $PSEUDO_OPTS $VAR_9p_SERVER $DIOD_OPTS"
+	setsid $PSEUDO $PSEUDO_OPTS $VAR_9p_SERVER $DIOD_OPTS &
+	local PGID=$!
+	disown
+	if [ ! $? = 0 ]; then
+		echo "Error starting diod"
+		exit 1
+	fi
+	echo $(ps -s $PGID -o pid=) > $PIDFILE
+}
+
 ### generic code ###
 
 SERVERPATH="VAR_${FS}_SERVER"
