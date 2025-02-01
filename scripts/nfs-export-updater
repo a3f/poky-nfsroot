@@ -79,13 +79,10 @@ def setup_nfs_exporter(rootfs):
         nfs_instance += 1
         nfsd_port += 1
 
-    mountd_port = nfsd_port
-
     # Export vars for runqemu-export-rootfs
     export_dict = {
-        'NFS_INSTANCE': nfs_instance,
-        'NFSD_PORT': nfsd_port,
-        'MOUNTD_PORT': mountd_port,
+        'INSTANCE': nfs_instance,
+        'PORT': nfsd_port,
     }
     for k, v in export_dict.items():
         # Use '%s' since they are integers
